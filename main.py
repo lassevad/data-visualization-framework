@@ -1,4 +1,14 @@
 import seaborn as sns
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+from matplotlib import pyplot
+
+df = pd.read_csv("pgaTourData.csv")
+df["Wins"] = df["Wins"].fillna(0)
+df1 = pd.read_csv("vettel.csv")
+print(df)
+plt.rcParams["figure.figsize"] = (15, 10)
 
 
 class PlotStrategy():
@@ -52,16 +62,24 @@ class Context():
     def headN(self, N):
         self.setDataFrame(self.getDataFrame().head(N))
 
+    def setNoBins(self, x, y):
+        pyplot.locator_params(axis='y', nbins=y)
+        pyplot.locator_params(axis='x', nbins=x)
+
 
 class ScatterStrategy(PlotStrategy):
     def plot(self, col1, col2, df, h):
         return sns.scatterplot(x=col1, y=col2, data=df, hue=h, size=h, sizes=(30, 200))
-    # fit_reg=True, scatter_kws={"s": 10}, line_kws={'color': 'red'},
+
+
+class ScatterRegStrategy(PlotStrategy):
+    def plot(self, col1, col2, df, h):
+        return sns.regplot(x=col1, y=col2, data=df, fit_reg=True, line_kws={'color': 'red'}).set(xlim=(0, 21))
 
 
 class LineStrategy(PlotStrategy):
     def plot(self, col1, col2, df, h):
-        return sns.lineplot(x=col1, y=col2, data=df, hue=h)
+        return sns.lineplot(x=col1, y=col2, data=df, hue=h, size=h)
 
 
 class BarStrategy(PlotStrategy):
@@ -71,8 +89,15 @@ class BarStrategy(PlotStrategy):
 
 if __name__ == "__main__":
 
-    pga = Context(ScatterStrategy(), df)
-    pga.removeCharFromColumn(',', "Money")
-    pga.removeCharFromColumn('$', "Money")
-    pga.convertToFloat("Money")
-    pga.plot("gir", "Money", "Wins")
+    #pga.removeCharFromColumn(',', "Money")
+    #pga.removeCharFromColumn('$', "Money")
+    # pga.convertToFloat("Money")
+    #pga.removeCharFromColumn(',', "Points")
+    # pga.convertToFloat("Points")
+
+    pga = Context(LineStrategy(), df)
+    pga.plot("SG:APR", "Money")
+
+    #df1 = pd.read_csv("vettel.csv")
+    #f1 = Context(ScatterRegStrategy(), df1)
+    #f1.plot("grid", "position")
