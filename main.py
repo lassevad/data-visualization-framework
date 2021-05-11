@@ -87,6 +87,31 @@ class BarStrategy(PlotStrategy):
         return sns.catplot(data=df, kind="bar", x=col1, y=col2, hue=h)
 
 
+class HistStrategy(PlotStrategy):
+    def plot(self, col1, col2, df, h):
+        return sns.histplot(df, x=col1, y=col2, hue=h, multiple="stack", palette="light:m_r")
+
+
+class CorrelogramStrategy(PlotStrategy):
+    def plot(self, col1, col2, df, h):
+        return sns.pairplot(df, hue=h)
+
+
+class BoxStrategy(PlotStrategy):
+    def plot(self, col1, col2, df, h):
+        return sns.boxplot(data=df, x=col1, y=col2, hue=h)
+
+
+class DensityStrategy(PlotStrategy):
+    def plot(self, col1, col2, df, h):
+        return sns.kdeplot(data=df, x=col1, y=col2, hue=h)
+
+
+class ViolinStrategy(PlotStrategy):
+    def plot(self, col1, col2, df, h):
+        return sns.violinplot(data=df, x=col1, y=col2, hue=h)
+
+
 if __name__ == "__main__":
 
     #pga.removeCharFromColumn(',', "Money")
